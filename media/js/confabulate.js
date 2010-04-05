@@ -406,7 +406,7 @@ var confab = {
 	    that.seating_server+"/people/remove/"+marker_id+".json?callback=?",
 	    function(result){
 		if(result['success']) {
-		    alert('person removed');
+		    
 		}
 		that.populate_markers();
 	    });
@@ -423,7 +423,7 @@ var confab = {
 	    that.square_brackify_keys('person', marker),
 	    function(result){
 		if(result['success']) {
-		    alert('Update Success');
+		    
 		}
 		that.populate_markers();
 	    });
