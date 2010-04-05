@@ -70,7 +70,7 @@ var confab = {
     // defined in this.click_draw
     click_coords:null,
     // folder where interest images would be stoed locally [defualt to store on rsrd_server]
-    interest_folder : '/interests',
+    interest_folder : '/media/img/spaces',
     current_interest_id : null,
     // the canvas for the markers
     canvas_id : null,
