@@ -64,11 +64,12 @@
         </fieldset>
       </form>
     </div>
-    <script type="text/javascript" src="/media/js/jquery-1.3.2.min.js" charset="utf8"></script>
-    <script type="text/javascript" src="/media/js/jquery-ui-1.7.2.custom.min.js"></script>
-    <script type="text/javascript" src="/media/js/logger.js" charset="utf8"></script>
+    <script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAATo3-ybCesv4eEUL9uVlUvRSO7clIrqm6tocdV4EDJyMUpPvCThQTEcgc1BZfRNwelXlIK4B7Oe4raQ"></script>
+    <script type="text/javascript">
+      google.load("jquery", "1.3.2");
+      google.load("jqueryui", "1.7.2");
+    </script>
     <script type="text/javascript" src="/media/js/confabulate.js" charset="utf8"></script>
-    <script type="text/javascript" src="/media/js/dialogs.js"></script>
     <script type="text/javascript">
       $(document).ready(function(){
         var interest_id=window.location.search.match(/id=([@\w\.]+)/);
