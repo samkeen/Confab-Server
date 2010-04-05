@@ -21,7 +21,11 @@
     <!--<canvas id="the-canvas" width="500" height="500" style="border:solid thin black;"></canvas>-->
         <img id="source_image" src="" />
         <div id="interest_details">
+          
           <h3 id="title"></h3>
+          <div id="marker_feedback">
+            <p></p>
+          </div>
           <ul id="marker_descriptions"></ul>
         </div>
 
@@ -66,7 +70,7 @@
     </div>
     <script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAATo3-ybCesv4eEUL9uVlUvRSO7clIrqm6tocdV4EDJyMUpPvCThQTEcgc1BZfRNwelXlIK4B7Oe4raQ"></script>
     <script type="text/javascript">
-      google.load("jquery", "1.3.2");
+      google.load("jquery", "1.4.2");
       google.load("jqueryui", "1.7.2");
     </script>
     <script type="text/javascript" src="/media/js/confabulate.js" charset="utf8"></script>

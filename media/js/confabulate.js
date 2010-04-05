@@ -406,7 +406,7 @@ var confab = {
 	    that.seating_server+"/people/remove/"+marker_id+".json?callback=?",
 	    function(result){
 		if(result['success']) {
-		    
+		    $('#marker_feedback p').html("Removal Successful").fadeIn(1000).delay(1000).fadeOut(2000);
 		}
 		that.populate_markers();
 	    });
@@ -423,7 +423,8 @@ var confab = {
 	    that.square_brackify_keys('person', marker),
 	    function(result){
 		if(result['success']) {
-		    
+		    $('#marker_feedback p')
+          .html("Update Successful").fadeIn(1000).delay(1000).fadeOut(2000);
 		}
 		that.populate_markers();
 	    });

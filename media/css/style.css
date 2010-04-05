@@ -11,6 +11,15 @@
    Syntax recommendation http://www.w3.org/TR/REC-CSS2/
 */
 
+#marker_feedback {
+  height: 2em;
+}
+#marker_feedback p {
+  display:none;
+  font-weight: 800;
+  color: green;
+}
+
 body {
     padding:0px;
     margin:0px;
