@@ -1,0 +1,66 @@
+/* 
+    Document   : style
+    Created on : Jun 24, 2009, 8:48:02 PM
+    Author     : sam
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+body {
+    padding:0px;
+    margin:0px;
+}
+#the-canvas {
+   float:left;
+   padding:0px;
+   margin:0px;
+   background-position:top left;
+   background-repeat:no-repeat;
+}
+div#interest_details {
+    float:left;
+    margin-left: 2em;
+}
+ul#marker_descriptions li{
+    list-style: none;
+    margin: 0 1em 1em 1em;
+    padding: .5em;
+}
+ul#marker_descriptions li {
+    font-weight:900;
+    border-top:thin grey solid;
+    background-color:#eee;
+}
+ul#marker_descriptions li p {
+    margin: 0 0 0 .5em;
+    font-style:oblique;
+}
+#sub-content {
+    clear:both;
+}
+#source_image {
+    display:none;
+}
+
+#marker_dialog form label, #marker_dialog form input {
+    display: block;
+}
+
+#marker_dialog fieldset { padding:0; border:0; margin-top:25px; }
+div#users-contain {  width: 350px; margin: 20px 0; }
+div#users-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
+div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
+.ui-button { outline: 0; margin:0; padding: .4em 1em .5em; text-decoration:none;  !important; cursor:pointer; position: relative; text-align: center; }
+.ui-dialog .ui-state-highlight, .ui-dialog .ui-state-error { padding: .3em;  }
+
+.ui-widget .text {
+    width:320px;
+}
+.ui-widget textarea {
+    height:75px;
+}
