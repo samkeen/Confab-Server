@@ -25,6 +25,7 @@ class Spaces_Controller extends Site_Controller {
     }
   }
   public function person($email=null) {
+    isset($this->profiler)?$this->profiler->disable():null;
     $this->template = new View("space_for");
     $this->template->title = 'Seating::Spaces';
     $this->template->content = new View('pages/spaces');
