@@ -519,13 +519,11 @@ var confab = {
   },
   highlight_marker : function(on_or_off, marker) {
     $RTC_log.debug("Implement me! highlight_marker");
+    this.draw_current_markers();
     if(on_or_off=='on') {
       $('#marker_'+marker.id).css('background-color', this.list_highlight_color);
       this.paint_image_marker(marker, this.icon_highlight);
       this.paint_icon_label(marker);
-    } else {
-      // clear the highlight marker
-      this.draw_current_markers();
     }
 
   },
