@@ -11,22 +11,19 @@ class People_Controller extends Template_Controller {
   }
   public function space_for($email=null) {
     $email = preg_replace('/\.json$/i', '', $email);
-    $peep = null;
+    $placements_for_space = null;
     if($email!==null) {
-      $people = new Person_Model;
-      $peep = $people->get_space_by_email($email);
-      
+      $placement = new Placement_Model;
+      $placements_for_space = $placement->get_by_email($email);
     } else {
 
     }
-    
+
     if ($this->is_json_request()) {
-      $this->json_response($peep);
+      $this->json_response($placements_for_space);
     } else {
       $this->template->title = 'Seating::People';
       $this->template->content = new View('pages/people');
-
-
     }
   }
   public function save($person_id=null) {
