@@ -1,298 +1,28 @@
-//################## LOGGER ###########################################
-var $RTC_log = {
-  _DEBUG : 100,
-  _INFO : 75,
-  _WARN : 50,
-  _ERROR : 0,
-  LOG_LEVEL : 100,
-  debug_on  :  typeof(console) == 'object' && this.LOG_LEVEL==this._DEBUG,
-
-  /// utility logging methods that use firebug console if found
-  debug : function(log_message, obj) {
-    if(typeof(console) == 'object' && this.LOG_LEVEL>=this._DEBUG) {
-      typeof(obj)!=='undefined'?console.debug(log_message, obj):console.debug(log_message);
-    }
-  },
-  info : function(log_message, obj) {
-    if(typeof(console) == 'object' && this.LOG_LEVEL>=this._INFO) {
-      typeof(obj)!=='undefined'?console.info(log_message, obj):console.info(log_message);
-    }
-  },
-  warn : function(log_message, obj) {
-    if(typeof(console) == 'object' && this.LOG_LEVEL>=this._WARN) {
-      typeof(obj)!=='undefined'?console.warn(log_message, obj):console.warn(log_message);
-    }
-  },
-  error : function(log_message, obj) {
-    if(typeof(console) == 'object' && this.LOG_LEVEL>=this._ERROR) {
-      typeof(obj)!=='undefined'?console.error(log_message, obj):console.error(log_message);
-    }
-  }
-}
-
-//################## MARKER DIALOG ###########################################
-
-var $RTC_marker_dialog = {
-
-  form_profile : null,
-  inputs_lookup:{},
-  form_inputs:[],
-  feedback_element:null,
-  close_callback:null,
-  button_clicked: false,
-
-  init:function(profile_name, close_callback) {
-    var that = this;
-    this.form_profile = this.form_profiles[profile_name]||null;
-    if(this.form_profile){
-      this.close_callback=close_callback;
-      if(!this.form_profile.dialog_id||!this.form_profile.feedback_element_id||!this.form_profile.form_input_ids||!this.close_callback) {
-        $RTC_log.error("Missing required args for $RTC_marker_dialog.init", $RTC_marker_dialog);
-      }
-      $(this.form_profile.form_input_ids).each(function(index,item){
-        that.inputs_lookup[item] = $('#'+item);
-        $RTC_log.debug($('#'+item));
-        that.form_inputs.push(that.inputs_lookup[item]);
-      });
-      that.feedback_element=$("#"+this.form_profile.feedback_element_id);
-      $RTC_log.debug(that.form_inputs);
-
-      $("#"+this.form_profile.dialog_id).dialog(this.form_profile.chrome);
-
-      $('#create-user').click(function() {
-        $('#dialog').dialog('open');
-      })
-      .hover(
-        function(){
-          $(this).addClass("ui-state-hover");
-        },
-        function(){
-          $(this).removeClass("ui-state-hover");
-        }
-        ).mousedown(function(){
-        $(this).addClass("ui-state-active");
-      })
-      .mouseup(function(){
-        $(this).removeClass("ui-state-active");
-      });
-
-    } else {
-      $RTC_log.error('Form Profile not known: ['+this.form_profile+']')
-    }
-
-  },
-  open_dialog : function(state, dialog_fields, marker_id) {
-    if(state=='edit') {
-      this.button_state('Remove', 'show');
-      this.set_field_values(dialog_fields);
-    } else { // is ADD
-      this.button_state('Remove', 'hide');
-    }
-    // set the 'state' hidden field: add|edit (to be recovered on close)
-    if($('#'+this.form_profile.dialog_id+' form #state').length) {
-      $('#'+this.form_profile.dialog_id+' form #state').val(state);
-    } else {
-      $('#'+this.form_profile.dialog_id+' form').append('<input type="hidden" id="state" value="'+state+'" />');
-    }
-    // set the marker_id hidden field (to be recovered on close)
-    if(marker_id) {
-      if($('#'+this.form_profile.dialog_id+' form #marker_id').length) {
-        $('#'+this.form_profile.dialog_id+' form #marker_id').val(marker_id);
-      } else {
-        $('#'+this.form_profile.dialog_id+' form').append('<input type="hidden" id="marker_id" value="'+marker_id+'" />');
-      }
-    }
-    $('#'+this.form_profile.dialog_id).dialog('open');
-  },
-  clear_form:function() {
-    $($RTC_marker_dialog.form_inputs).each(function(){
-      $(this).val('').removeClass('ui-state-error');
-    });
-  },
-  clear_form_errors:function() {
-    $($RTC_marker_dialog.form_inputs).each(function(){
-      $(this).removeClass('ui-state-error');
-    });
-  },
-  all_field_values:function() {
-    var all_values = {};
-    $($RTC_marker_dialog.form_inputs).each(function(){
-      all_values[$(this).attr('id')]=$(this).val();
-    });
-    return all_values;
-  },
-  /**
-     * @param object field_values {(field id):(field value),...}
-     */
-  set_field_values:function(submitted_input) {
-    if(submitted_input) {
-      $(this.form_inputs).each(function(i, input){
-        input.val(submitted_input[input.attr('id')]);
-      });
-    }
-  },
-  updateTips:function(t) {
-    this.feedback_element.text(t).effect("highlight",{},1500);
-  },
-
-  checkLength:function(input_element,msg_label,min,max) {
-    if ( input_element.val().length > max || input_element.val().length < min ) {
-      input_element.addClass('ui-state-error');
-      this.updateTips("Length of " + msg_label + " must be between "+min+" and "+max+".");
-      return false;
-    } else {
-      return true;
-    }
-  },
-  required:function(input_element, msg_label) {
-    if ( !input_element.val().length > 0 ) {
-      input_element.addClass('ui-state-error');
-      this.updateTips(msg_label + " is Required");
-      return false;
-    } else {
-      return true;
-    }
-  },
-  email:function(input_element,error_message) {
-    var valid = false;
-    var pattern = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
-    valid = String(input_element.val()).search (pattern) != -1;
-    if ( !valid ) {
-      input_element.addClass('ui-state-error');
-      this.updateTips(error_message);
-    }
-    return valid;
-  },
-  checkRegexp:function(input_element,regexp,error_message) {
-    if ( !( regexp.test( input_element.val() ) ) ) {
-      input_element.addClass('ui-state-error');
-      this.updateTips(error_message);
-      return false;
-    } else {
-      return true;
-    }
-  },
-  /**
-     * @param button_label (only way to get ahold of a button in jqui)
-     * @param state show|hide
-     */
-  button_state : function(button_label, state) {
-    if(state=='show') {
-      $(":button:contains("+button_label+")").show();
-    } else if(state=='hide') {
-      $(":button:contains("+button_label+")").hide();
-    }
-  },
-
-  form_profiles : {
-
-    text_form : {
-      'dialog_id' : 'marker_dialog',
-      'form_input_ids' : ['marker_label','use_icon','marker_desc','marker_size','marker_color'],
-      'feedback_element_id' : 'validateTips',
-      'chrome' : {
-        autoOpen: false,
-        height: 400,
-        width: 400,
-        modal: true,
-        buttons: {
-          'Create Marker': function() {
-            that.clear_form_errors();
-            var bValid = true;
-            $(that.form_inputs).removeClass('ui-state-error');
-            bValid = bValid && that.checkLength(that.marker_label,"Label",1,50);
-            //bValid = bValid && $RTC_marker_dialog.checkRegexp($RTC_marker_dialog.marker_size,/^[0-9]+\.?[0-9]*$/,"The marker size should be numeric");
-            if (bValid) {
-              $(this).dialog('close');
-            }
-          },
-          Cancel: function() {
-            that.clear_form();
-            $(this).dialog('close');
-          },
-          'Delete Marker' : function() {
-            $(this).dialog('close');
-          }
-        }
-        ,
-        close: function(event, ui) {
-          var state = $(this).find('form #state').val();
-          // report values back to confab
-          $RTC_log.debug($RTC_marker_dialog);
-          if($RTC_marker_dialog.button_clicked && state!='cancel') {
-            $RTC_marker_dialog.close_callback(state, $RTC_marker_dialog.all_field_values());
-          }
-          //confab.retrieve_dialog_values($RTC_marker_dialog.all_field_values());
-          $RTC_marker_dialog.clear_form();
-        }
-      }
-    },
-
-    seat_form : {
-      'dialog_id' : 'seat_dialog',
-      'feedback_element_id' : 'validateTips',
-      'form_input_ids' : ['marker_email'],
-      'chrome' : {
-        autoOpen: false,
-        height: 200,
-        width: 400,
-        modal: true,
-        buttons: {
-          Cancel: function() {
-            $RTC_marker_dialog.button_clicked = true;
-            $RTC_marker_dialog.clear_form();
-            $(this).find('form #state').val('cancel');
-            $(this).dialog('close');
-          },
-          Save: function() {
-            $RTC_marker_dialog.button_clicked = true;
-            $RTC_marker_dialog.clear_form_errors();
-            var bValid = true;
-            $($RTC_marker_dialog.form_inputs).removeClass('ui-state-error');
-            bValid = bValid && $RTC_marker_dialog.email($RTC_marker_dialog.inputs_lookup['marker_email'],"Not a valid Email");
-            if (bValid) {
-              $(this).dialog('close');
-            }
-          },
-          Remove: function() {
-            $RTC_marker_dialog.button_clicked = true;
-            $(this).find('form #state').val('delete');
-            $(this).dialog('close');
-          }
-        },
-        close: function(event) {
-          var state = $(this).find('form #state').val();
-          var marker_id = $(this).find('form #marker_id').val();
-          // report values back to confab
-          $RTC_log.debug($RTC_marker_dialog);
-          if($RTC_marker_dialog.button_clicked && state!='cancel') {
-            $RTC_marker_dialog.close_callback(state, $RTC_marker_dialog.all_field_values(), marker_id);
-          }
-          $RTC_marker_dialog.clear_form();
-        }
-      }
-
-    }
-  }
-
-}
-
-
 //################## CONFAB ###########################################
 
 var confab = {
-  // the persistance server for the interests and markers
-  //    seating_server : 'http://rcrd.releasethecodes.com',
-  seating_server : 'http://seating.local',
-  //    seating_server : 'http://localhost/confabulate/persist.php',
+  // 
+  get_markers_url   : "http://seating.local/people/space_for",
+  save_markers_url  : "http://seating.local/people/save",
+  remove_marker_url : "http://seating.local/people/remove",
+
   // the current makers indexed by id (primary key)
   current_markers : {},
   // defined in this.click_draw
   click_coords:null,
   // folder where interest images would be stoed locally [defualt to store on rsrd_server]
   interest_folder : '/media/img/spaces',
+
   current_focus_id : null,
-  current_space : null,
+  
+  /**
+   * all the aspects of location, so we have:
+   * - present_location['site']     // ex: Mountain View
+   * - present_location['building'] // ex: Main Office
+   * - present_location['space']    // ex: 3rd Floor
+   */
+  present_location : {}, //
+  
   // the canvas for the markers
   canvas_id : null,
   canvas_element : null,
@@ -342,7 +72,7 @@ var confab = {
     var that = this;
     this.over_marker_id = null;
     $.getJSON(
-      that.seating_server+"/people/remove/"+marker_id+".json?callback=?",
+      that.remove_marker_url+"/"+marker_id+".json?callback=?",
       function(result){
         if(result['success']) {
           $('#marker_feedback p').html("Removal Successful").fadeIn(1000).delay(1000).fadeOut(2000);
@@ -356,9 +86,9 @@ var confab = {
      */
   save_marker : function(marker) {
     var that = this;
-    var update_path = marker.id!==null ? "save/"+marker.id : "save/";
+    var marker_id = marker.id!==null ? "/"+marker.id : "/";
     $.getJSON(
-      that.seating_server+"/people/"+update_path+".json?callback=?",
+      that.save_markers_url+marker_id+".json?callback=?",
       that.square_brackify_keys('person', marker),
       function(result){
         if(result['success']) {
@@ -381,7 +111,7 @@ var confab = {
      *
      * @param state 'add'|'edit'|'delete'
      * @param all_fields (object) Keys are 'marker_label','marker_desc','marker_size','marker_color'
-     * @param delete_marker (boolean) true if user submitted the delete marker command
+     * @param marker_id id of the marker the dialog was in refernce to
      *
      */
   handle_marker_dialog_close:function(state, all_fields, marker_id) {
@@ -391,7 +121,7 @@ var confab = {
         if(all_fields['marker_email']) {
           confab.save_marker({
             id: null,
-            space_id: confab.current_space.id,
+            space_id: confab.present_location.space.id,
             email:all_fields['marker_email'],
             x:confab.click_coords.canvas_x,
             y:confab.click_coords.canvas_y
@@ -487,7 +217,7 @@ var confab = {
   },
   /*
    * @param {} marker {coordinate_label:_,click_x:_,click_y:_,}
-   * @param string mode add | edit | view
+   * @param mode 'add' | 'edit' | 'view'
    */
   draw_marker : function(marker, mode) {
     this.click_coords = null;
@@ -530,20 +260,24 @@ var confab = {
   populate_markers : function() {
     var that = this;
     if(this.current_focus_id!==null) {
-      $.getJSON(that.seating_server+"/people/space_for/"+this.current_focus_id+".json?callback=?",
+      $.getJSON(that.get_markers_url+"/"+this.current_focus_id+".json?callback=?",
         function(space_w_markers){
           var markers = space_w_markers['people'];
           var focus_marker = space_w_markers['focus'];
-          that.current_space = space_w_markers['space'];
-          var image_path = that.current_space.img_uri.match(/^https?:\/\//)
-          ? that.current_space.img_uri
-          : that.interest_folder+'/'+that.current_space.img_uri;
+          that.present_location.site = space_w_markers['site'];
+          that.present_location.building = space_w_markers['building'];
+          that.present_location.space = space_w_markers['space'];
+          var image_path = that.present_location.space.img_uri.match(/^https?:\/\//)
+            ? that.present_location.space.img_uri
+            : that.interest_folder+'/'+that.present_location.space.img_uri;
           var image_height = null;
           var image_width = null;
           // clear the list
           $('#marker_descriptions li').remove();
           // place the title above the canvas
-          $('#title').html(that.current_space.name);
+          $('#interest_details .site_name').html(that.present_location.site.name);
+          $('#interest_details .building_name').html(that.present_location.building.name);
+          $('#interest_details .space_name').html(that.present_location.space.name);
           that.current_markers = {};
           for(marker_key in markers) {
             that.current_markers[markers[marker_key].id] = markers[marker_key];
