@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-    <title>Test Confabulate Document</title>
+    <title>Mozilla Seating</title>
     <!--CSS Foundation: (also partially aggegrated in reset-fonts-grids.css; does not include base.css)-->
     <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.7.0/build/reset/reset-min.css" />
     <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.7.0/build/base/base-min.css" />
@@ -14,15 +14,15 @@
 
   <body>
     <div id="header">
-      <h1>Confabulate</h1>
+      <h1>Mozilla Seating</h1>
     </div>
     <div id="body">
       <div id="content">
-    <!--<canvas id="the-canvas" width="500" height="500" style="border:solid thin black;"></canvas>-->
         <img id="source_image" src="" />
         <div id="interest_details">
-          
-          <h3 id="title"></h3>
+          <h3 class="site_name"></h3>
+          <h4 class="building_name"></h4>
+          <h4 class="space_name"></h4>
           <div id="marker_feedback">
             <p></p>
           </div>
@@ -73,11 +73,14 @@
       google.load("jquery", "1.4.2");
       google.load("jqueryui", "1.7.2");
     </script>
+    <!-- script type="text/javascript" src="/media/min/?g=confab-all" charset="utf8"></script -->
+    <script type="text/javascript" src="/media/js/logger.js" charset="utf8"></script>
+    <script type="text/javascript" src="/media/js/dialogs.js" charset="utf8"></script>
     <script type="text/javascript" src="/media/js/confabulate.js" charset="utf8"></script>
     <script type="text/javascript">
       $(document).ready(function(){
-        var interest_id=window.location.search.match(/id=([@\w\.]+)/);
-        confab.init('the-canvas',interest_id!==null?interest_id[1]:null);
+        confab.init('the-canvas',"<?php echo html::specialchars($target_person_id); ?>");
+        
       });
     </script>
   </body>

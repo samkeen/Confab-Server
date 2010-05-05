@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class People_Controller extends Site_Controller {
+class People_Controller extends Template_Controller {
   
 
   public function index($id=null) {
@@ -32,6 +32,7 @@ class People_Controller extends Site_Controller {
   public function save($person_id=null) {
     $person_id = (int)preg_replace('/\.json$/i', '', $person_id);
     $result = null;
+    
     $people = new Person_Model;
     $result = $people->save($this->input->get('person'), $person_id);
     

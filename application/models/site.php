@@ -1,11 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Site_Model {
-
-  /**
-   * The database instance.
-   */
-  protected $db;
+class Site_Model extends Model {
 
   /**
    * Class constructor.
@@ -14,22 +9,21 @@ class Site_Model {
    * @return	void
    */
   public function __construct() {
-    $this->db = Database::instance();
+    parent::__construct();
   }
 
-  public function result_as_array($result_set) {
-    $array_results = array();
-    if($result_set) {
-      foreach ($result_set as $result) {
-        $array_results[]=is_array($result)?$result:$result->to_array();
-      }
-    }
-    return count($array_results)==1?$array_results[0]:$array_results;
+  public function select_list() {
+    $buildings = $this->db->select('*')
+      ->from('buildings')
+      ->where(
+        array(
+          'buildings.active' => '1'
+        )
+      )
+      ->get();
+    return $this->result_as_array($buildings);
   }
-  protected function get_trimmed_allowed(array $data, array $allowed_fields) {
-    $allowed_fields = array_fill_keys($allowed_fields,null);
-    $update_data = array_intersect_key($data,$allowed_fields);
-    return array_map('trim',$update_data);
-  }
+
+  
 
 }

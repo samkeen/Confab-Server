@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Person_Model extends Site_Model {
+class Person_Model extends Model {
 
   protected $belongs_to = array('space');
 
@@ -23,13 +23,28 @@ class Person_Model extends Site_Model {
         break;
       }
     }
-    $space =
-      $this->db->select('spaces.*')
+    $location_info =
+      $this->db->select(
+      'spaces.name AS space_name, spaces.index AS space_index,
+       spaces.img_uri AS space_img_uri, spaces.active AS space_active,
+       buildings.name AS building_name, buildings.lat AS building_lat,
+       buildings.long AS building_long, buildings.active AS building_active,
+       sites.name AS site_name, sites.lat AS site_lat,
+       sites.long AS site_long, sites.active AS site_active'
+      )
       ->from('spaces')
-      ->where('id', $person['space_id'])
+      ->join('buildings','spaces.building_id', 'buildings.id')
+      ->join('sites','buildings.site_id', 'sites.id')
+      ->where('spaces.id', $person['space_id'])
       ->get();
-    $space = $this->result_as_array($space);
-    return array('people'=>$people,'space'=>$space,'focus'=>$focus_person);
+    
+    $location_info = $this->result_as_array($location_info);
+    $location_info = $this->split_out_array_result(array('space','building','site'), $location_info);
+    return array(
+        'people'=>$people,'space'=>$location_info['space'],
+        'building'=>$location_info['building'], 'site'=>$location_info['site'],
+        'focus'=>$focus_person
+    );
   }
 
   public function save(array $person=array(), $person_id = null) {

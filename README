@@ -1,0 +1,16 @@
+
+
+
+JSON Result for http://seating.local/people/space_for/skeen@mozilla.com.json?callback=jsonp1272928555479
+
+
+jsonp1272928555479({
+  "people":[
+    {"id":"1","space_id":"1","email":"skeen@mozilla.com","x":"609","y":"194","active":"1"},
+    {"id":"2","space_id":"1","email":"morgamic@mozilla.com","x":"710","y":"132","active":"1"}
+  ],
+  "space":{"name":"3rd floor","index":"3","img_uri":"mtview0_3.gif","active":"1"},
+  "building":{"name":"Main Office","lat":"37.3893","long":"-122.083","active":"1"},
+  "site":{"name":"Mountain View","lat":"37.389280000000","long":"-122.083114000000","active":"1"},
+  "focus":{"id":"1","space_id":"1","email":"skeen@mozilla.com","x":"609","y":"194","active":"1"}
+})

@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Space_Model extends Site_Model {
+class Space_Model extends Model {
 
   /**
    * Class constructor.
