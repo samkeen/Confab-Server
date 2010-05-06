@@ -228,6 +228,13 @@ var confab = {
       } else {
         $('#marker_descriptions').append(this.marker_desc_list_element(marker));
       }
+      if(marker.focus) {
+        // highlight it in the list
+        $('#marker_'+marker.id).css('background-color', this.list_highlight_color);
+        // repaint the marker using the hilight icon
+        this.paint_image_marker(marker, this.icon_highlight);
+        this.paint_icon_label(marker);
+      }
     }
   },
   marker_desc_list_element : function(marker) {
@@ -236,34 +243,33 @@ var confab = {
     return $('<li id="marker_'+marker.id+'"'+title+'>'+marker.email+'</li>')
     .mouseover(function(event){
       var marker_id = $(this).attr('id').match(/\d+$/);
-      that.highlight_marker('on', that.current_markers[marker_id]);
+      that.focus_on(marker_id);
     })
     .mouseout(function(){
       var marker_id = $(this).attr('id').match(/\d+$/);
-      that.highlight_marker('off', that.current_markers[marker_id]);
+      that.focus_on(marker_id);
     })
     .click(function(){
       var marker_id = $(this).attr('id').match(/\d+$/);
       that.open_dialog('edit', that.current_markers[marker_id]);
     });
   },
-  highlight_marker : function(on_or_off, marker) {
-    $RTC_log.debug("Implement me! highlight_marker");
-    this.draw_current_markers();
-    if(on_or_off=='on') {
-      $('#marker_'+marker.id).css('background-color', this.list_highlight_color);
-      this.paint_image_marker(marker, this.icon_highlight);
-      this.paint_icon_label(marker);
+  focus_on : function(focus_on_id) {
+    for(var key in this.current_markers) {
+      if (focus_on_id==key) {
+        this.current_markers[key]['focus']=true;
+      } else {
+        this.current_markers[key]['focus']=false;
+      }
     }
-
+    this.draw_current_markers();
   },
   populate_markers : function() {
     var that = this;
     if(this.current_focus_id!==null) {
       $.getJSON(that.get_markers_url+"/"+this.current_focus_id+".json?callback=?",
         function(space_w_markers){
-          var markers = space_w_markers['people'];
-          var focus_marker = space_w_markers['focus'];
+          var markers = space_w_markers['placements'];
           that.present_location.site = space_w_markers['site'];
           that.present_location.building = space_w_markers['building'];
           that.present_location.space = space_w_markers['space'];
@@ -279,6 +285,7 @@ var confab = {
           $('#interest_details .building_name').html(that.present_location.building.name);
           $('#interest_details .space_name').html(that.present_location.space.name);
           that.current_markers = {};
+          // place markers into a dictionary indexed by marker.id (its primary key)
           for(marker_key in markers) {
             that.current_markers[markers[marker_key].id] = markers[marker_key];
           }
@@ -318,7 +325,6 @@ var confab = {
               that.pointer_down_handler(event);
             }
             that.draw_current_markers();
-            that.highlight_marker('on',focus_marker);
 
           });
         });
@@ -331,7 +337,8 @@ var confab = {
     if(this.over_marker_id != null) {
       if(this.pointer_left_marker_bounds(pointer_x, pointer_y)) {
         this.over_marker_highlighted=false;
-        this.highlight_marker('off', this.current_markers[this.over_marker_id]);
+        this.current_markers[this.over_marker_id]['focus']=false;
+        this.draw_current_markers();
         $('#marker_'+this.over_marker_id).css('background-color', '#eee');
         this.over_marker_id = null;
       }
@@ -340,7 +347,7 @@ var confab = {
     }
     if(this.over_marker_id!=null && !this.over_marker_highlighted) {
       this.over_marker_highlighted=true;
-      this.highlight_marker('on', this.current_markers[this.over_marker_id]);
+      this.focus_on(this.over_marker_id);
       $('#marker_'+this.over_marker_id).css('background-color', this.list_highlight_color);
       $RTC_log.debug('Over Marker',this.current_markers[this.over_marker_id]);
     }

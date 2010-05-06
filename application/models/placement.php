@@ -65,11 +65,10 @@ class Placement_Model extends Model {
       }
       array_push($additional_placements, $focus_placement_info['placement']);
       $placements_for_space = array(
-        'people'=> $additional_placements,
+        'placements'=> $additional_placements,
         'space'=>$focus_placement_info['space'],
         'building'=>$focus_placement_info['building'],
-        'site'=>$focus_placement_info['site'],
-        'focus'=>$focus_placement_info['placement']
+        'site'=>$focus_placement_info['site']
       );
     }
     
