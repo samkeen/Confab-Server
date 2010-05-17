@@ -10,6 +10,7 @@ class client {
 
 
     private static $validation_results = null;
+    
 
     /**
      * Retrieves messages intended for the user/client from a lower level function.
@@ -50,7 +51,7 @@ class client {
             if (!empty($warnings) || !empty($errors)) {
                 $message_html .= "
                         <div class=\"negative\">
-                          <span class=\"close\"><a href=\"#\" onclick=\"$('#notification.negative').hide('slow');return false;\">Close</a></span>
+                          <span class=\"close\"><a href=\"#\" onclick=\"$('#notifications').hide('slow');return false;\">Close</a></span>
                           <p>
                                 Uh oh! Something went wrong...
                                 <ul>
@@ -112,7 +113,13 @@ class client {
             }
         }
     }
-
+    /**
+     * Set the results of the validation (from Validation_Core).
+     * self::validation($input_key) then uses this to output those errors
+     * at the specific form input element
+     * 
+     * @param array $results
+     */
     public static function validation_results($results) {
         self::$validation_results = $results;
     }
@@ -124,9 +131,10 @@ class client {
      */
     public static function validation($input_key) {
         if(isset(self::$validation_results[$input_key])&&!empty(self::$validation_results[$input_key])) {
-            echo("<span class=\"error\">".u::h(self::$validation_results[$input_key],false)."</span>");
+            echo("<span class=\"error\">".htmlspecialchars(self::$validation_results[$input_key], ENT_NOQUOTES, 'UTF-8')."</span>");
         }
     }
+    
     /*
      * Returns true if client is storing messages at E_USER_ERROR || E_USER_WARNING
      *

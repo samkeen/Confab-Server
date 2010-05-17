@@ -8,6 +8,25 @@ class Sites_Controller extends Template_Controller {
     $this->template->content = new View('pages/spaces');
 
   }
+  
+  public function add() {
+    
+    $this->template->title = 'Sites :: Add';
+    $this->template->content = new View('pages/sites_add');
+    
+    $site = ORM::factory('site');
+    
+    if ($post = $this->input->post()) {
+      if ($site->validate($post)) {
+        $site->save();
+        url::redirect('sites');
+      } else {
+        client::validation_results($post->errors());
+        client::messageSend("There were errors in some fields", E_USER_WARNING);
+      }
+    }
+    $this->template->content->site = $site;
+  }
   public function markers($space_id=null) {
     $space_id = preg_replace('/\.json$/i', '', $space_id);
     $space = null;

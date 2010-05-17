@@ -1,0 +1,67 @@
+form label {
+  margin: 8px 0 0 0;
+  display:block;
+  font-weight: 600;
+}
+
+form input[type='checkbox'] {
+    float:left;
+    margin-right: 5px;
+}
+
+form input[type='submit'] {
+  margin: 7px 0;
+}
+
+form .section {
+    margin-left: 30px;
+}
+
+form label.required:after { content: "*"; }
+
+.ac_input {
+    font-size: 95%;
+}
+
+
+#notifications .negative,  #notifications .positive {
+  margin-top:-9px;
+  font-weight: bold;
+  width:100%;
+  padding: 6px 9px;
+  background-color:#6176a0;
+  margin-bottom:18px;
+  margin-left:-9px;
+-moz-border-radius: 3px;
+-webkit-border-radius: 3px;
+
+}
+
+#notifications ul {
+  font-weight: normal;
+  list-style-position: inside;
+}
+
+#notifications .close a {
+
+  font-weight: normal;
+  float:right;
+  color: #4c2f2f;
+}
+
+#notifications .positive a {
+    color: #fff;
+}
+#notifications .positive .close a {
+  color:#c4d2db;
+}
+
+#notifications .positive {
+  color: #ffe29d;
+  background-color:#6176a0;
+}
+
+#notifications .negative {
+  color: #4c2f2f;
+  background-color:#ff9d9f;
+}
