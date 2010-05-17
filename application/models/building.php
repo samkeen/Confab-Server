@@ -1,8 +1,8 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Site_Model extends ORM {
+class Building_Model extends ORM {
     
-    protected $has_many = array('buildings');
+    protected $belongs_to = array('site');
 
     public function validate(array & $array, $save = FALSE) {
         // Initialise the validation library and setup some rules

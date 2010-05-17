@@ -1,5 +1,6 @@
 application/logs/*
 application/cache/*
+application/config/config.php
 nbproject
 .DS_Store
 *.kpf
