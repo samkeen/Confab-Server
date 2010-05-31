@@ -1,12 +1,12 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class People_Controller extends Template_Controller {
+class Markers_Controller extends Template_Controller {
   
 
   public function index($id=null) {
 
     $this->template->title = 'Seating::People';
-    $this->template->content = new View('pages/people');
+    $this->template->content = new View('pages/markers');
 
   }
   public function space_for($email=null) {
@@ -23,15 +23,15 @@ class People_Controller extends Template_Controller {
       $this->json_response($placements_for_space);
     } else {
       $this->template->title = 'Seating::People';
-      $this->template->content = new View('pages/people');
+      $this->template->content = new View('pages/markers');
     }
   }
-  public function save($person_id=null) {
-    $person_id = (int)preg_replace('/\.json$/i', '', $person_id);
+  public function save($marker_id=null) {
+    $marker_id = (int)preg_replace('/\.json$/i', '', $marker_id);
     $result = null;
     
-    $people = new Person_Model;
-    $result = $people->save($this->input->get('person'), $person_id);
+    $markers = new Person_Model;
+    $result = $markers->save($this->input->get('marker'), $marker_id);
     
     if($result['success']) {
 
@@ -43,11 +43,11 @@ class People_Controller extends Template_Controller {
     }
 //    die($update_context);
   }
-  public function remove($person_id=null) {
-    $person_id = (int)preg_replace('/\.json$/i', '', $person_id);
+  public function remove($marker_id=null) {
+    $marker_id = (int)preg_replace('/\.json$/i', '', $marker_id);
     $result = null;
-    $people = new Person_Model;
-    $result = $people->remove($person_id);
+    $markers = new Person_Model;
+    $result = $markers->remove($marker_id);
 
     if ($this->is_json_request()) {
       $this->json_response($result);

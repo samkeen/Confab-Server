@@ -10,16 +10,16 @@ class Person_Model extends Model {
   }
 
   public function get_space_by_email($email) {
-    $focus_person = null;
-    $people =
-      $this->db->select('people.*')
-      ->from('people')
+    $focus_marker = null;
+    $markers =
+      $this->db->select('markers.*')
+      ->from('markers')
       ->where(array('active' => 1))
       ->get();
-    $people = $this->result_as_array($people);
-    foreach ($people as $person) {
-      if($person['email']==$email) {
-        $focus_person=$person;
+    $markers = $this->result_as_array($markers);
+    foreach ($markers as $marker) {
+      if($marker['email']==$email) {
+        $focus_marker=$marker;
         break;
       }
     }
@@ -35,67 +35,67 @@ class Person_Model extends Model {
       ->from('spaces')
       ->join('buildings','spaces.building_id', 'buildings.id')
       ->join('sites','buildings.site_id', 'sites.id')
-      ->where('spaces.id', $person['space_id'])
+      ->where('spaces.id', $marker['space_id'])
       ->get();
     
     $location_info = $this->result_as_array($location_info);
     $location_info = $this->split_out_array_result(array('space','building','site'), $location_info);
     return array(
-        'people'=>$people,'space'=>$location_info['space'],
+        'markers'=>$markers,'space'=>$location_info['space'],
         'building'=>$location_info['building'], 'site'=>$location_info['site'],
-        'focus'=>$focus_person
+        'focus'=>$focus_marker
     );
   }
 
-  public function save(array $person=array(), $person_id = null) {
+  public function save(array $marker=array(), $marker_id = null) {
     $result = array(
       'success'=>false,
       'error' => ''
     );
     
     $valid = true;
-    $person = $this->get_trimmed_allowed(
-      $person,
+    $marker = $this->get_trimmed_allowed(
+      $marker,
       array('space_id','email','x','y','active')
     );
-    if(isset($person['space_id']) && !valid::digit($person['space_id'])) {
+    if(isset($marker['space_id']) && !valid::digit($marker['space_id'])) {
       $valid = false;
     }
-    if(isset($person['email']) && !valid::email($person['email'])) {
+    if(isset($marker['email']) && !valid::email($marker['email'])) {
       $valid = false;
     }
-    if(isset($person['x']) && !valid::numeric($person['x'])) {
+    if(isset($marker['x']) && !valid::numeric($marker['x'])) {
       $valid = false;
     }
-    if(isset($person['y']) && !valid::numeric($person['y'])) {
+    if(isset($marker['y']) && !valid::numeric($marker['y'])) {
       $valid = false;
     }
-    if(isset($person['active']) && !valid::digit($person['active'])) {
+    if(isset($marker['active']) && !valid::digit($marker['active'])) {
       $valid = false;
     }
     if($valid) {
-      if($person_id) {//UPDATE
+      if($marker_id) {//UPDATE
         $this->db
-          ->from('people')
-          ->set($person)
-          ->where(array('id' => (int)$person_id)
+          ->from('markers')
+          ->set($marker)
+          ->where(array('id' => (int)$marker_id)
           )->update();
         $result['success']=true;
         
       } else { // INSERT
-        $new_person = $this->db
-          ->from('people')
-          ->set($person)
+        $new_marker = $this->db
+          ->from('markers')
+          ->set($marker)
           ->insert();
         $result['success']=true;
-        $person_id = $new_person->insert_id();
+        $marker_id = $new_marker->insert_id();
       }
-      $person = $this->db->select('people.*')
-        ->from('people')
-        ->where(array('id' => $person_id))
+      $marker = $this->db->select('markers.*')
+        ->from('markers')
+        ->where(array('id' => $marker_id))
         ->get();
-      $person = $this->result_as_array($person);
-      $result['person']=$person;
+      $marker = $this->result_as_array($marker);
+      $result['marker']=$marker;
     } else {
       $result['error']="The supplied data was invalid";
     }
@@ -104,16 +104,16 @@ class Person_Model extends Model {
     return $result;
     
   }
-  public function remove($person_id) {
+  public function remove($marker_id) {
     $result = array(
       'success'=>false,
       'error' => ''
     );
     $this->db
-      ->from('people')
+      ->from('markers')
       ->where(
         array(
-          'id' => $person_id
+          'id' => $marker_id
         )
       )
       ->delete();
