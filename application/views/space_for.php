@@ -79,7 +79,7 @@
     <script type="text/javascript" src="/media/js/confabulate.js" charset="utf8"></script>
     <script type="text/javascript">
       $(document).ready(function(){
-        confab.init('the-canvas',"<?php echo html::specialchars($target_person_id); ?>");
+        confab.init('the-canvas',"<?php echo html::specialchars($target_marker_id); ?>");
         
       });
     </script>

@@ -8,7 +8,7 @@ class Controller extends Controller_Core {
   public function __construct() {
     parent::__construct();
 
-    $this->profiler = new Profiler;
+//    $this->profiler = new Profiler;
 
 
 

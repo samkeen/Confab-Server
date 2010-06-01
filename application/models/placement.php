@@ -20,7 +20,7 @@ class Placement_Model extends Model {
     $focus_placement = null;
     $focus_placement_info =
       $this->db->select(
-          'people.id AS placement_id, people.email AS placement_email,
+          'markers.id AS placement_id, markers.email AS placement_email,
            placements.x AS placement_x, placements.y AS placement_y,
            spaces.id AS space_id, spaces.name AS space_name,
            spaces.img_uri AS space_img_uri, spaces.index AS space_index,
@@ -30,11 +30,11 @@ class Placement_Model extends Model {
            sites.long AS site_long, sites.active AS site_active'
       )
       ->from('placements')
-      ->join('people','placements.person_id','people.id')
+      ->join('markers','placements.marker_id','markers.id')
       ->join('spaces','placements.space_id', 'spaces.id')
       ->join('buildings','spaces.building_id', 'buildings.id')
       ->join('sites','buildings.site_id', 'sites.id')
-      ->where(array('people.email'=>$email, 'people.active' => 1))
+      ->where(array('markers.email'=>$email, 'markers.active' => 1))
       ->get();
     $focus_placement_info = $this->result_as_array($focus_placement_info);
     /**
@@ -46,15 +46,15 @@ class Placement_Model extends Model {
       
       $additional_placements =
         $this->db->select(
-          "people.id, people.email,
+          "markers.id, markers.email,
            placements.x , placements.y"
         )
         ->from('placements')
-        ->join('people','placements.person_id','people.id')
+        ->join('markers','placements.marker_id','markers.id')
         ->where(array(
           'placements.space_id' => $focus_placement_info['space']['id'],
-          'people.active' => 1,
-          'people.id !=' => $focus_placement_info['placement']['id']
+          'markers.active' => 1,
+          'markers.id !=' => $focus_placement_info['placement']['id']
         ))
         ->get();
 

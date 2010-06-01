@@ -31,8 +31,8 @@ class Spaces_Controller extends Template_Controller {
                 // check for invilid
                 $form = arr::overwrite($form, $post->as_array());
 
-                $people = new Person_Model;
-                $result = $people->save($this->input->get('person'), $person_id);
+                $markers = new Person_Model;
+                $result = $markers->save($this->input->get('marker'), $marker_id);
 
             } else {
                 $form = arr::overwrite($form, $post->as_array());
@@ -54,7 +54,7 @@ class Spaces_Controller extends Template_Controller {
         $space = null;
         if($space_id!==null) {
             $spaces = new Space_Model();
-            $space = $spaces->get_people($space_id);
+            $space = $spaces->get_markers($space_id);
         } else {
 
         }
@@ -67,15 +67,15 @@ class Spaces_Controller extends Template_Controller {
     }
 
     /**
-     * This display the HTML/js page that will request people/space_for
+     * This display the HTML/js page that will request markers/space_for
      * via JSONP, the response is the markers for that space
      *
      * @param string $email
      */
-    public function with($target_person_id=null) {
+    public function with($target_marker_id=null) {
         isset($this->profiler)?$this->profiler->disable():null;
         $this->template = new View("space_for");
-        $this->template->target_person_id = $target_person_id;
+        $this->template->target_marker_id = $target_marker_id;
         $this->template->title = 'Seating::Spaces';
         $this->template->content = new View('pages/spaces');
         

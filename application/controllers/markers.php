@@ -5,7 +5,7 @@ class Markers_Controller extends Template_Controller {
 
   public function index($id=null) {
 
-    $this->template->title = 'Seating::People';
+    $this->template->title = 'Seating::Markers';
     $this->template->content = new View('pages/markers');
 
   }
@@ -22,7 +22,7 @@ class Markers_Controller extends Template_Controller {
     if ($this->is_json_request()) {
       $this->json_response($placements_for_space);
     } else {
-      $this->template->title = 'Seating::People';
+      $this->template->title = 'Seating::Markers';
       $this->template->content = new View('pages/markers');
     }
   }
@@ -30,7 +30,7 @@ class Markers_Controller extends Template_Controller {
     $marker_id = (int)preg_replace('/\.json$/i', '', $marker_id);
     $result = null;
     
-    $markers = new Person_Model;
+    $markers = new Marker_Model;
     $result = $markers->save($this->input->get('marker'), $marker_id);
     
     if($result['success']) {
@@ -46,7 +46,7 @@ class Markers_Controller extends Template_Controller {
   public function remove($marker_id=null) {
     $marker_id = (int)preg_replace('/\.json$/i', '', $marker_id);
     $result = null;
-    $markers = new Person_Model;
+    $markers = new Marker_Model;
     $result = $markers->remove($marker_id);
 
     if ($this->is_json_request()) {

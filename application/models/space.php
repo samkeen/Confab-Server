@@ -12,7 +12,7 @@ class Space_Model extends Model {
     parent::__construct();
   }
 
-  public function get_people($space_id) {
+  public function get_markers($space_id) {
     // get the info for this floor
     $space = $this->db->select('spaces.*')
       ->from('spaces')
@@ -24,18 +24,18 @@ class Space_Model extends Model {
       )
       ->get();
     $space = $this->result_as_array($space);
-    // add all the people
-    $people = 
-      $this->db->select('people.*')
-      ->from('people')
+    // add all the markers
+    $markers = 
+      $this->db->select('markers.*')
+      ->from('markers')
       ->where(
         array(
           'space_id' => $space['id'],
-          'people.active' => '1'
+          'markers.active' => '1'
         )
       )
       ->get();
-    $space['people'] = $this->result_as_array($people);
+    $space['markers'] = $this->result_as_array($markers);
     return $space;
   }
 

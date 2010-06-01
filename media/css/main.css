@@ -1,3 +1,36 @@
+#footer {
+    clear: both;
+}
+
+#sub_header {
+	padding: 3px;
+	margin-bottom: 25px;
+}
+
+#sub_header ul {
+	margin-left: 0;
+	padding-left: 0;
+	display: inline;
+	border: none;
+}
+
+#sub_header ul li {
+    font-style: oblique;
+	margin-left: 0;
+	padding-left: 2px;
+	border: none;
+	list-style: none;
+	display: inline;
+}
+
+#site_nav {
+    float: right;
+}
+
+
+
+
+
 form label {
   margin: 8px 0 0 0;
   display:block;
